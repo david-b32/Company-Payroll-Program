@@ -1,0 +1,160 @@
+
+#include <iostream>
+#include <iomanip>    
+#include <string>
+#include <cctype>
+#include <climits>
+using namespace std;
+
+void intro();
+void displayHeader();
+
+int getEmployees()
+{
+  //declare integer size
+  int size = 0;
+  
+  //ask user to input number of employees
+  cout << "Enter number of employees:" << endl;
+  cin >> size;
+
+  //checks if input is an integer and greater than 0
+  while (!cin.good() || size <= 0)
+  {
+    //Error message
+    cout << "ERROR: Invalid Response! Please enter a number greater than 0." << endl;
+
+    //clears whatever number inputted
+    cin.clear();
+    cin.ignore(INT_MAX, '\n');
+    
+    //repeats asking for input
+    cout << "Enter number of employees:" << endl;
+    cin >> size;
+  }
+
+  //add one to size for numbering employees
+  size++;
+
+  return size;
+}
+
+int main()
+{
+  intro();
+
+  int size = getEmployees();
+  const double TAXRATE = 0.12;
+  double hours[size], 
+    hourlyRate[size],
+    regHours[size],
+    ovtHours[size], 
+    grossPay[size], 
+    taxes[size], 
+    netPay[size];
+  string firstName, lastName, fullName[size];
+
+  //for loop loops for every i after size is returned
+  for (int i = 1; i < size; i++)
+  {
+    //Gets Employee's first and last name
+    cout << "\nEnter Employee's #" << i << " first name: ";
+    cin >> firstName;
+    cout << "Enter Employee's #" << i << " last name: ";
+    cin >> lastName;
+
+    //gets employees hours worked
+    cout << "Enter Employee's #" << i << " hours worked: ";
+    cin >> hours[i];
+    
+    //checks whether number inputed is greater than 0 or less than 80
+    while (hours[i] <= 0 || hours[i] >= 80)
+    {
+      //Error message
+      cout << "ERROR: Invalid Response! Please enter a number greater than 0 or less than 80." << endl;
+
+      //clears whatever number inputted
+      cin.clear();
+      cin.ignore(INT_MAX, '\n');
+
+      //repeats asking for input
+      cout << "Enter Employee's #" << i << " hours worked: ";
+      cin >> hours[i]; 
+    }
+
+    //gets employee's hourly pay
+    cout << "Enter Employee's #" << i << " hourly pay: ";
+    cin >> hourlyRate[i];
+    
+    //check whether number inputed is grater than 0
+    while (hourlyRate[i] <= 0)
+    {
+      //Error message
+      cout << "ERROR: Invalid Response! Please enter a number greater than 0." << endl;
+
+      //clears whatever number inputted
+      cin.clear();
+      cin.ignore(INT_MAX, '\n');
+
+      //repeats asking for input
+      cout << "Enter Employee's #" << i << " hourly pay: ";
+      cin >> hourlyRate[i];
+    }
+
+    //combines first and last name and puts it in an array
+    fullName[i] = lastName + ", " + firstName;
+
+    //splits hours
+    if (hours[i] <= 40) {
+      regHours[i] = hours[i];
+      ovtHours[i] = 0.00;
+    }
+    else if (hours[i] > 40) {
+      regHours[i] = 40;
+      ovtHours[i] = hours[i] - 40;
+	  }
+
+    //calulates total pay
+    grossPay[i] = (regHours[i] * hourlyRate[i]) + (ovtHours[i] * (hourlyRate[i] * 1.5));
+
+    //calcualtes taxes
+    taxes[i] = TAXRATE * grossPay[i];
+
+    //calculates total income after taxes
+    netPay[i] = grossPay[i] - taxes[i];
+  }
+  
+  //displays header
+  displayHeader();
+
+  //for loops displays info for every person inputed
+  for (int i = 1; i < size; i++)
+  {
+    cout << setw(0) << " " << i << " ";
+    cout << setw(20) << left << fullName[i] << "  ";
+    cout << setw(7) << right << regHours[i] << "  ";
+    cout << setw(8) << ovtHours[i] << "  ";
+    cout << setw(6) << fixed << setprecision(2) << hourlyRate[i] << "  ";
+    cout << setw(8) << grossPay[i] << "  ";
+    cout << setw(7) << taxes[i] << "  ";
+    cout << setw(8) << netPay[i] << "  ";
+    cout << endl; 
+  }
+}
+  
+// Introduction to program
+void intro() 
+  {
+    cout << "This program allows the user to calculate the gross income for the employees at a given company." << endl;
+	  cout << "Lets get started!\n" << endl;
+  }
+
+// this module will display the header information 
+void displayHeader() {
+
+	cout << endl;
+	cout << "                         Regular  Overtime  Hourly  Gross                      " << endl;
+	cout << "   Name (Last, First)    Hours    Hours     Rate    Pay       Taxes    Net Pay " << endl;
+	cout << "   ====================  =======  ========  ======  ========  =======  ========" << endl;
+}
+
